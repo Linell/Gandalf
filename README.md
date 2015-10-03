@@ -7,8 +7,11 @@ Clone gandalf's repo.
 Open config/config.exs 
 
 ```
-config :gandalf, [ server: { "irc.freenode.net", 6667, "gandalf" },
-                   channel: { "##proggit" } ]
+config :gandalf, [ 
+                   server:      { "irc.freenode.net", 6667, "gandalf" },
+                   channel:     { "##proggit" },
+                   scripts_dir: "./scripts/"
+                 ]
 ```
 Configure the conf variable with the address of the IRC server, its port, the client name, 
 and the connected channel.

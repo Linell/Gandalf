@@ -2,8 +2,11 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
  
-config :gandalf, [ server: { "irc.freenode.net", 6667, "gandalf" },
-                   channel: { "##theshire" } ]
+config :gandalf, [ 
+                   server:      { "irc.freenode.net", 6667, "gandalf" },
+                   channel:     { "##theshire" },
+                   scripts_dir: "./scripts/"
+                 ]
 
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this

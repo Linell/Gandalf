@@ -18,6 +18,9 @@ defmodule Gandalf.Mixfile do
   end
 
   defp deps do
-    []
+    [
+      { :ibrowse, github: "cmullaparthi/ibrowse", tag: "v4.1.2" },
+      { :httpotion, "~> 2.1.0" }
+    ]
   end
 end

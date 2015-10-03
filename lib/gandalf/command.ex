@@ -10,6 +10,7 @@ defmodule Commands do
   end
 
   def find(phrase) do
+    name = @name
     set = Agent.get(@name, fn(set) -> set end)
     Enum.find(set, fn ({ pattern, _ }) -> Regex.match?(pattern, phrase) end) 
   end

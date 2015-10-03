@@ -1,5 +1,4 @@
 defmodule Bridge.IRC do
-  require IEx
 
   def run() do
     { server, port, nickname } = Application.get_env(:gandalf, :server)
@@ -10,9 +9,10 @@ defmodule Bridge.IRC do
   end
 
   def do_listen(socket) do
-    ping      = ~r/\APING/
-    motd_end  = ~r/\/MOTD/
-    msg       = ~r/PRIVMSG gandalf/
+    ping              = ~r/\APING/
+    motd_end          = ~r/\/MOTD/
+    join              = ~r/\JOIN/
+    msg               = ~r/PRIVMSG gandalf/
     { channel_name  } = channel
     { :ok, invoker }  = Regex.compile("PRIVMSG #{channel_name} :#{bot_name}:")
 
@@ -21,17 +21,18 @@ defmodule Bridge.IRC do
         IO.puts data
 
         if Regex.match?(motd_end, data), do: join_channel(socket)
-        if Regex.match?(ping, data), do: pong(socket, data)
+        if Regex.match?(ping, data),     do: ping(socket, data)
+        if Regex.match?(join, data),     do: join(socket, data)
 
         if Regex.match?(invoker, data) do
-          bits = String.split(data, ":#{bot_name}:")
-          phrase = String.strip(Enum.at bits, 1)
+          bits    = String.split(data, ":#{bot_name}:")
+          phrase  = String.strip(Enum.at bits, 1)
           command = Commands.find(phrase)
           if command do
             { pattern, func } = command
-            args = Regex.scan(pattern, phrase, capture: :all_but_first)
-            speaker_name = speaker(Enum.at bits, 0)
-            args = Enum.filter(args, &((Enum.count &1) > 0))
+            args              = Regex.scan(pattern, phrase, capture: :all_but_first)
+            speaker_name      = speaker(Enum.at bits, 0)
+            args              = Enum.filter(args, &((Enum.count &1) > 0))
 
             if (Enum.count(args) > 0) do
               result = func.(speaker_name, Enum.at(args, 0))
@@ -56,7 +57,7 @@ defmodule Bridge.IRC do
 
   def say(socket, msg) do
     responder = fn
-      { channel } -> transmit(socket, "PRIVMSG #{channel} :#{msg}")
+      { channel }           -> transmit(socket, "PRIVMSG #{channel} :#{msg}")
       { channel, password } -> transmit(socket, "PRIVMSG #{channel} :#{msg}")
     end
 
@@ -72,9 +73,13 @@ defmodule Bridge.IRC do
     joiner.(channel)
   end
 
-  def pong(socket, data) do
+  def ping(socket, data) do
     server = Enum.at(Regex.split(~r/\s/, data), 1)
-    transmit(socket, "PONG #{ server }")
+    transmit(socket, "PING #{ server }")
+  end
+
+  def join(socket, data) do
+    say socket, "Welcome to the Shire!"
   end
 
   def bot_name do
@@ -88,7 +93,7 @@ defmodule Bridge.IRC do
 
   def speaker(irc_fragment) do
     bits = String.split(irc_fragment, "!")
-    str = Enum.at bits, 0
+    str  = Enum.at bits, 0
     String.slice(str, 1..-1)
   end
 end
