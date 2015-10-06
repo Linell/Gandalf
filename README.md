@@ -25,12 +25,12 @@ elixir --sname gandalf -S mix run --no-halt
 When the bot appears in the channel speak to it:
 
 ```
-6:59 AM <•Linell> gandalf: heya
-6:59 AM <gandalf> aight Linell
+6:59 AM <Linell> gandalf: heya
+6:59 AM <gandalf_bot> aight Linell
 
 ```
 
-Open `gandalf.exs` and see how you can write Gandalf commands.
+Open `scripts/generic.exs` and see how you can write Gandalf commands.
 
 ```
 import Gandalf
@@ -40,6 +40,7 @@ command "pattern", fn(speaker) ->
     #return a string holding the bot's response
 end
 ```
+
 The simplest command takes a phrase for recognition then, followed by a comma, an anonymous 
 function with one argument - the name of the speaker in the IRC chatroom. It should return a 
 string to appear in the chatroom.
@@ -54,38 +55,19 @@ command "say (.*)", fn (speaker, args) ->
 end
 ```
 
+You can add as many files ot the scripts folder as you want. Everything in here will be
+included as a command (as long as it uses the command syntax from above).
+
+If you notice that there's something you want to do a lot of, to the point that you're 
+writing a lot of repetitive code, you can create a "song" (named around 
+[this](http://lotr.wikia.com/wiki/Music_of_the_Ainur)) to handle that for you. For examples
+of this, check out `lib/gandalf/songs/generic.ex`. This allos you to define just about
+whatever you want without cluttering up your scripts file.
+
 ```
-6:45 PM <nicholasf> gandalf: say something or other
-6:45 PM <gandalf> something or other
+6:45 AM <Linell> gandalf: say something or other
+6:45 AM <gandalf_bot> something or other
 ````
-
-Connect to the running gandalf Erlang Node and hot load a new command remotely.
-
-```
-♪  gandalf git:(master) ✗ iex --sname bark
-Erlang/OTP 17 [erts-6.0] [source] [64-bit] [smp:8:8] [async-threads:10] [hipe] [kernel-poll:false]
-
-Interactive Elixir (0.13.3) - press Ctrl+C to exit (type h() ENTER for help)
-iex(bark@argo)1> Node.connect :gandalf@argo
-true
-iex(bark@argo)2> c "lib/gandalf.ex"
-[Gandalf]
-iex(bark@argo)2> c "lib/gandalf/commands.ex"
-[Commands]
-iex(bark@argo)3> import Gandalf
-nil
-iex(bark@argo)4> command "mirror me", &(String.reverse(&1))
-:ok
-
-```
-
-The command will be ready in the bot. 
-
-Add more commands in gandalf.exs or build your own exs file and parse it in the remote node:
-
-```
-iex(bark@argo)4> Code.require_file("alternate_commands.exs") 
-```
 
 ## Credit
 

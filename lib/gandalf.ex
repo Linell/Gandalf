@@ -11,8 +11,6 @@ defmodule Gandalf do
 
     include_scripts
 
-    Code.require_file("gandalf.exs")
-
     Supervisor.start_link(children, opts)
   end
 

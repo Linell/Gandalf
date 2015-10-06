@@ -3,7 +3,7 @@
 use Mix.Config
  
 config :gandalf, [ 
-                   server:      { "irc.freenode.net", 6667, "gandalf" },
+                   server:      { "irc.freenode.net", 6667, "gandalf_bot" },
                    channel:     { "##theshire" },
                    scripts_dir: "./scripts/"
                  ]
