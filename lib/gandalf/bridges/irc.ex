@@ -12,7 +12,6 @@ defmodule Bridge.IRC do
     ping              = ~r/\APING/
     motd_end          = ~r/\/MOTD/
     join              = ~r/\JOIN/
-    part              = ~r/\PART/
     msg               = ~r/PRIVMSG gandalf/
 
     { channel_name  } = channel
