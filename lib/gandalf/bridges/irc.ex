@@ -12,7 +12,9 @@ defmodule Bridge.IRC do
     ping              = ~r/\APING/
     motd_end          = ~r/\/MOTD/
     join              = ~r/\JOIN/
+    part              = ~r/\PART/
     msg               = ~r/PRIVMSG gandalf/
+
     { channel_name  } = channel
     { :ok, invoker }  = Regex.compile("PRIVMSG #{channel_name} :#{bot_name}:")
 
@@ -22,7 +24,6 @@ defmodule Bridge.IRC do
 
         if Regex.match?(motd_end, data), do: join_channel(socket)
         if Regex.match?(ping, data),     do: ping(socket, data)
-        if Regex.match?(join, data),     do: join(socket, data)
 
         if Regex.match?(invoker, data) do
           bits    = String.split(data, ":#{bot_name}:")
@@ -76,10 +77,6 @@ defmodule Bridge.IRC do
   def ping(socket, data) do
     server = Enum.at(Regex.split(~r/\s/, data), 1)
     transmit(socket, "PING #{ server }")
-  end
-
-  def join(socket, data) do
-    say socket, "Welcome to the Shire!"
   end
 
   def bot_name do
