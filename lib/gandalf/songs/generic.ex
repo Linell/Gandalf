@@ -25,4 +25,12 @@ defmodule Gandalf.Songs do
     }
   end
 
+  @doc """
+  Transforms a given string into an IRC action. Emulates typing `/me does stuff` in an IRC
+  client.
+  """
+  def make_action(string) do
+    "\u0001ACTION #{string}\u0001"
+  end
+
 end

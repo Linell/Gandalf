@@ -28,6 +28,7 @@ defmodule Bridge.IRC do
           bits    = String.split(data, ":#{bot_name}:")
           phrase  = String.strip(Enum.at bits, 1)
           command = Commands.find(phrase)
+
           if command do
             { pattern, func } = command
             args              = Regex.scan(pattern, phrase, capture: :all_but_first)
