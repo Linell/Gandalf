@@ -15,7 +15,7 @@ defmodule Bridge.IRC do
     msg               = ~r/PRIVMSG gandalf/
 
     { channel_name  } = channel
-    { :ok, invoker }  = Regex.compile("PRIVMSG #{channel_name} :#{bot_name}:")
+    { :ok, invoker }  = ~r/PRIVMSG #{channel_name} (:#{bot_name}:|!)/
 
     case :gen_tcp.recv(socket, 0) do
       { :ok, data } ->
